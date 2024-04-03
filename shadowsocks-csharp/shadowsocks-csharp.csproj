@@ -284,6 +284,7 @@
     <Compile Include="Proxy\Socks5Proxy.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Controller\System\Hotkeys\Hotkeys.cs" />
+    <Compile Include="Util\Base64Util.cs" />
     <Compile Include="Util\ProcessManagement\Job.cs" />
     <Compile Include="Util\ProcessManagement\ThreadUtil.cs" />
     <Compile Include="Util\ProxySpeedTest.cs" />

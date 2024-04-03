@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shadowsocks.Model;
 
@@ -30,8 +32,26 @@ namespace Shadowsocks.Controller.Service
 
         private static readonly IEnumerable<Server> EMPTY_SERVERS = Array.Empty<Server>();
 
-        internal static IEnumerable<Server> GetServers(this string json) =>
-            JToken.Parse(json).SearchJToken().AsEnumerable();
+        ////internal static IEnumerable<Server> GetServers(this string json) =>
+        ////    JToken.Parse(json).SearchJToken().AsEnumerable();
+
+        internal static IEnumerable<Server> GetServers(this string json)
+        {
+            try
+            {
+                return JToken.Parse(json).SearchJToken().AsEnumerable();
+            }
+            catch (JsonReaderException)
+            {
+                var servers = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(json));
+                return Server.GetServers(servers);
+            }
+        }
+
+        internal static IEnumerable<Server> AsServers(this string[] json)
+        {
+            return null;
+        }
 
         private static IEnumerable<Server> SearchJArray(JArray array) =>
             array == null ? EMPTY_SERVERS : array.SelectMany(SearchJToken).ToList();

@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Buffers.Text;
+using Shadowsocks.Util;
 
 namespace Shadowsocks.Model
 {
@@ -184,6 +186,12 @@ namespace Shadowsocks.Model
         public static Server ParseURL(string serverUrl)
         {
             string _serverUrl = serverUrl.Trim();
+
+            if (_serverUrl.StartsWith("ssr://", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Server.ServerFromSSR(serverUrl);
+            }
+
             if (!_serverUrl.StartsWith("ss://", StringComparison.InvariantCultureIgnoreCase))
             {
                 return null;
@@ -250,6 +258,60 @@ namespace Shadowsocks.Model
             }
         }
 
+        private static Server ServerFromSSR(string ssrURL)
+        {
+            Match match = Regex.Match(ssrURL, "ssr://([A-Za-z0-9_-]+)", RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                throw new FormatException();
+            }
+            string str = Base64Util.DecodeUrlSafeBase64(match.Groups[1].Value);
+            Dictionary<string, string> strs = new Dictionary<string, string>();
+            Match match1 = null;
+            if (0 < 2)
+            {
+                int num = str.IndexOf("?", StringComparison.Ordinal);
+                if (num > 0)
+                {
+                    strs = Server.ParseParam(str.Substring(num + 1));
+                    str = str.Substring(0, num);
+                }
+                if (str.IndexOf("/", StringComparison.Ordinal) >= 0)
+                {
+                    str = str.Substring(0, str.LastIndexOf("/", StringComparison.Ordinal));
+                }
+                match1 = (new Regex("^(.+):([^:]+):([^:]*):([^:]+):([^:]*):([^:]+)")).Match(str);
+                if (!match1.Success)
+                {
+                    throw new FormatException();
+                }
+            }
+            if (match1 == null || !match1.Success)
+            {
+                throw new FormatException();
+            }
+            Server server = new Server()
+            {
+                server = match1.Groups[1].Value,
+                server_port = int.Parse(match1.Groups[2].Value)
+            };
+            if (((match1.Groups[3].Value.Length == 0 ? "origin" : match1.Groups[3].Value)).Replace("_compatible", "") != "origin")
+            {
+                return null;
+            }
+            server.method = match1.Groups[4].Value;
+            server.password = Base64Util.DecodeStandardSSRUrlSafeBase64(match1.Groups[6].Value);
+            if (strs.ContainsKey("remarks"))
+            {
+                server.remarks = Base64Util.DecodeStandardSSRUrlSafeBase64(strs["remarks"]);
+            }
+            if (strs.ContainsKey("group"))
+            {
+                server.remarks = Base64Util.DecodeStandardSSRUrlSafeBase64(strs["group"]);
+            }
+            return server;
+        }
+
         public static List<Server> GetServers(string ssURL)
         {
             return ssURL
@@ -283,6 +345,23 @@ namespace Shadowsocks.Model
                 return string.Concat(new string[] { this.remarks, " ([", this.server, "]:", this.server_port.ToString(), ")" });
             }
             return string.Concat(new string[] { this.remarks, " (", this.server, ":", this.server_port.ToString(), ")" });
+        }
+
+        private static Dictionary<string, string> ParseParam(string param_str)
+        {
+            Dictionary<string, string> strs = new Dictionary<string, string>();
+            string[] strArrays = param_str.Split(new char[] { '&' });
+            for (int i = 0; i < (int)strArrays.Length; i++)
+            {
+                string str = strArrays[i];
+                if (str.IndexOf('=') > 0)
+                {
+                    int num = str.IndexOf('=');
+                    string str1 = str.Substring(0, num);
+                    strs[str1] = str.Substring(num + 1);
+                }
+            }
+            return strs;
         }
     }
 }
