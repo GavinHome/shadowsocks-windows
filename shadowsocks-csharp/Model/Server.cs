@@ -29,6 +29,7 @@ namespace Shadowsocks.Model
         public int server_port;
         public string password;
         public string method;
+        public float speed;
         // optional fields
         [DefaultValue("")]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
@@ -261,6 +262,27 @@ namespace Shadowsocks.Model
         public string Identifier()
         {
             return server + ':' + server_port;
+        }
+
+        public object FriendlyName()
+        {
+            if (string.IsNullOrEmpty(this.server))
+            {
+                return I18N.GetString("New server", Array.Empty<object>());
+            }
+            if (string.IsNullOrEmpty(this.remarks))
+            {
+                if (this.server.IndexOf(':') < 0)
+                {
+                    return string.Concat(this.server, ":", this.server_port.ToString());
+                }
+                return string.Concat("[", this.server, "]:", this.server_port.ToString());
+            }
+            if (this.server.IndexOf(':') >= 0)
+            {
+                return string.Concat(new string[] { this.remarks, " ([", this.server, "]:", this.server_port.ToString(), ")" });
+            }
+            return string.Concat(new string[] { this.remarks, " (", this.server, ":", this.server_port.ToString(), ")" });
         }
     }
 }

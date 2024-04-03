@@ -48,8 +48,10 @@
             this.ShowPasswdCheckBox = new System.Windows.Forms.CheckBox();
             this.PluginArgumentsTextBox = new System.Windows.Forms.TextBox();
             this.PluginArgumentsLabel = new System.Windows.Forms.Label();
-            this.RemarksLabel = new System.Windows.Forms.Label();
             this.NeedPluginArgCheckBox = new System.Windows.Forms.CheckBox();
+            this.GroupTextBox = new System.Windows.Forms.TextBox();
+            this.GroupLabel = new System.Windows.Forms.Label();
+            this.RemarksLabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.OKButton = new System.Windows.Forms.Button();
             this.MyCancelButton = new System.Windows.Forms.Button();
@@ -66,8 +68,6 @@
             this.DuplicateButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.GroupLabel = new System.Windows.Forms.Label();
-            this.GroupTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.ServerGroupBox.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
@@ -327,17 +327,6 @@
             this.toolTip1.SetToolTip(this.PluginArgumentsLabel, "Not a SIP003 standard. Used as CLI arguments.\r\nMandatory:\r\n%SS_LOCAL_HOST%, %SS_L" +
         "OCAL_PORT%, %SS_REMOTE_HOST%, %SS_REMOTE_PORT%\r\nOptional:\r\n%SS_PLUGIN_OPTIONS%");
             // 
-            // RemarksLabel
-            // 
-            this.RemarksLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.RemarksLabel.AutoSize = true;
-            this.RemarksLabel.Location = new System.Drawing.Point(80, 288);
-            this.RemarksLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.RemarksLabel.Name = "RemarksLabel";
-            this.RemarksLabel.Size = new System.Drawing.Size(63, 15);
-            this.RemarksLabel.TabIndex = 8;
-            this.RemarksLabel.Text = "Remarks";
-            // 
             // NeedPluginArgCheckBox
             // 
             this.NeedPluginArgCheckBox.AutoSize = true;
@@ -349,6 +338,39 @@
             this.NeedPluginArgCheckBox.Text = "Need Plugin Argument";
             this.NeedPluginArgCheckBox.UseVisualStyleBackColor = true;
             this.NeedPluginArgCheckBox.CheckedChanged += new System.EventHandler(this.UsePluginArgCheckBox_CheckedChanged);
+            // 
+            // GroupTextBox
+            // 
+            this.GroupTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GroupTextBox.Location = new System.Drawing.Point(150, 345);
+            this.GroupTextBox.MaxLength = 5;
+            this.GroupTextBox.Name = "GroupTextBox";
+            this.GroupTextBox.ReadOnly = true;
+            this.GroupTextBox.Size = new System.Drawing.Size(205, 25);
+            this.GroupTextBox.TabIndex = 12;
+            // 
+            // GroupLabel
+            // 
+            this.GroupLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GroupLabel.AutoSize = true;
+            this.GroupLabel.Location = new System.Drawing.Point(96, 350);
+            this.GroupLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.GroupLabel.Name = "GroupLabel";
+            this.GroupLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.GroupLabel.Size = new System.Drawing.Size(47, 15);
+            this.GroupLabel.TabIndex = 11;
+            this.GroupLabel.Text = "Group";
+            // 
+            // RemarksLabel
+            // 
+            this.RemarksLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.RemarksLabel.AutoSize = true;
+            this.RemarksLabel.Location = new System.Drawing.Point(80, 288);
+            this.RemarksLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.RemarksLabel.Name = "RemarksLabel";
+            this.RemarksLabel.Size = new System.Drawing.Size(63, 15);
+            this.RemarksLabel.TabIndex = 8;
+            this.RemarksLabel.Text = "Remarks";
             // 
             // panel2
             // 
@@ -553,28 +575,6 @@
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel7.Size = new System.Drawing.Size(562, 533);
             this.tableLayoutPanel7.TabIndex = 8;
-            // 
-            // GroupLabel
-            // 
-            this.GroupLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GroupLabel.AutoSize = true;
-            this.GroupLabel.Location = new System.Drawing.Point(96, 350);
-            this.GroupLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.GroupLabel.Name = "GroupLabel";
-            this.GroupLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GroupLabel.Size = new System.Drawing.Size(47, 15);
-            this.GroupLabel.TabIndex = 11;
-            this.GroupLabel.Text = "Group";
-            // 
-            // GroupTextBox
-            // 
-            this.GroupTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GroupTextBox.Location = new System.Drawing.Point(150, 345);
-            this.GroupTextBox.MaxLength = 5;
-            this.GroupTextBox.Name = "GroupTextBox";
-            this.GroupTextBox.ReadOnly = true;
-            this.GroupTextBox.Size = new System.Drawing.Size(205, 25);
-            this.GroupTextBox.TabIndex = 12;
             // 
             // ConfigForm
             // 

@@ -69,7 +69,8 @@ namespace Shadowsocks.Model
             enabled = false;
             shareOverLan = false;
             firstRun = true;
-            localPort = 1080;
+            //localPort = 1080;
+            localPort = 10801;
             portableMode = true;
             showPluginOutput = false;
             pacUrl = "";

@@ -6,11 +6,13 @@ using Shadowsocks.Properties;
 using Shadowsocks.Util;
 using Shadowsocks.Views;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using System.Windows.Threading;
@@ -35,7 +37,7 @@ namespace Shadowsocks.View
 
         private ContextMenu contextMenu1;
         private MenuItem disableItem;
-        private MenuItem AutoStartupItem;
+        private MenuItem AutoStartupItem;        
         private MenuItem ProtocolHandlerItem;
         private MenuItem ShareOverLANItem;
         private MenuItem SeperatorItem;
@@ -59,6 +61,8 @@ namespace Shadowsocks.View
         private MenuItem ShowPluginOutputToggleItem;
         private MenuItem WriteI18NFileItem;
         private MenuItem onlineConfigItem;
+        private MenuItem UpdateServersItem;
+        private MenuItem SortServersItem;
 
         private ConfigForm configForm;
         private LogForm logForm;
@@ -289,6 +293,9 @@ namespace Shadowsocks.View
                 this.ProtocolHandlerItem = CreateMenuItem("Associate ss:// Links", new EventHandler(this.ProtocolHandlerItem_Click)),
                 this.ShareOverLANItem = CreateMenuItem("Allow other Devices to connect", new EventHandler(this.ShareOverLANItem_Click)),
                 new MenuItem("-"),
+                //this.UpdateServersItem = CreateMenuItem("Update Servers", new EventHandler(this.UpdateServers_Click)),
+                this.SortServersItem = CreateMenuItem("Sort Servers", new EventHandler(this.SpeedTestServers_Click)),
+                new MenuItem("-"),
                 this.hotKeyItem = CreateMenuItem("Edit Hotkeys...", new EventHandler(this.hotKeyItem_Click)),
                 CreateMenuGroup("Help", new MenuItem[] {
                     CreateMenuItem("Show Logs...", new EventHandler(this.ShowLogItem_Click)),
@@ -305,6 +312,38 @@ namespace Shadowsocks.View
                 }),
                 new MenuItem("-"),
                 CreateMenuItem("Quit", new EventHandler(this.Quit_Click))
+            });
+        }
+
+        private void UpdateServers_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SpeedTestServers_Click(object sender, EventArgs e)
+        {
+            Configuration configurationCopy = this.controller.GetCurrentConfiguration();
+            Task<Server>[] array = configurationCopy.configs.ConvertAll<Task<Server>>((Server server) => {
+                Task<Server> task = new Task<Server>(() =>
+                {
+                    server.speed = ProxySpeedTest.DoTest(server);
+                    logger.Info(string.Format("Speed test : {0}, cost:{1}", server.FriendlyName(), server.speed));
+                    return server;
+                });
+                task.Start();
+                return task;
+            }).ToArray();
+
+            Task.Factory.ContinueWhenAll<Server>(array, (Task<Server>[] serverArr) => {
+                int num = serverArr.Count<Task<Server>>();
+                IList<Server> servers = configurationCopy.configs;
+                IEnumerable<Server> servers1 = servers.Where<Server>((Server x) => x.speed < 5f);
+                configurationCopy.configs = servers1.OrderBy<Server, float>((Server x) => x.speed).ToList<Server>();
+
+                string[] str = new string[] { "Speed test finished, total:", num.ToString(), ", valid server:", configurationCopy.configs.Count.ToString(), ", the server will be sorted..." };
+                logger.Info(string.Concat(str));
+                this.controller.SaveServers(configurationCopy.configs, configurationCopy.localPort, configurationCopy.portableMode);
+                this.controller.Start(true);
             });
         }
 
