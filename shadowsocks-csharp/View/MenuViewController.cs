@@ -61,7 +61,6 @@ namespace Shadowsocks.View
         private MenuItem ShowPluginOutputToggleItem;
         private MenuItem WriteI18NFileItem;
         private MenuItem onlineConfigItem;
-        private MenuItem UpdateServersItem;
         private MenuItem SortServersItem;
 
         private ConfigForm configForm;
@@ -293,7 +292,6 @@ namespace Shadowsocks.View
                 this.ProtocolHandlerItem = CreateMenuItem("Associate ss:// Links", new EventHandler(this.ProtocolHandlerItem_Click)),
                 this.ShareOverLANItem = CreateMenuItem("Allow other Devices to connect", new EventHandler(this.ShareOverLANItem_Click)),
                 new MenuItem("-"),
-                //this.UpdateServersItem = CreateMenuItem("Update Servers", new EventHandler(this.UpdateServers_Click)),
                 this.SortServersItem = CreateMenuItem("Sort Servers", new EventHandler(this.SpeedTestServers_Click)),
                 new MenuItem("-"),
                 this.hotKeyItem = CreateMenuItem("Edit Hotkeys...", new EventHandler(this.hotKeyItem_Click)),
@@ -313,11 +311,6 @@ namespace Shadowsocks.View
                 new MenuItem("-"),
                 CreateMenuItem("Quit", new EventHandler(this.Quit_Click))
             });
-        }
-
-        private void UpdateServers_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void SpeedTestServers_Click(object sender, EventArgs e)
