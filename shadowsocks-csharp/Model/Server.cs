@@ -71,8 +71,18 @@ namespace Shadowsocks.Model
 
             string serverStr = $"{FormalHostName}:{server_port}";
             return string.IsNullOrEmpty(remarks)
-                ? serverStr
-                : $"{remarks} ({serverStr})";
+                ? $"{serverStr} {FormatSpeed(speed)}"
+                : $"{remarks} ({serverStr}) {FormatSpeed(speed)}";
+        }
+
+        private string FormatSpeed(float speed)
+        {
+            if (speed > 0f && speed < 5f)
+            {
+                return $"- {(speed * 1000).ToString("F2")}ms";
+            }
+
+            return string.Empty;
         }
 
         public string GetURL(bool legacyUrl = false)
